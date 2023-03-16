@@ -946,13 +946,10 @@ int systemdIsInit() {
 }
 
 int systemdActive() {
-    struct stat a, b;
+    int r;
 
-    if (lstat("/sys/fs/cgroup", &a) < 0)
-        return 0;
-    if (lstat("/sys/fs/cgroup/systemd", &b) < 0)
-        return 0;
-    if (a.st_dev == b.st_dev)
+    r = system("systemctl --version > /dev/null 2>&1");
+    if (r != 0)
         return 0;
     if (!systemdIsInit())
         return 0;
